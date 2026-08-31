@@ -25,14 +25,14 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Create Dummy Static Output & Setup Capacitor
         run: |
           mkdir -p out
           echo '<html><body><h1>Ultron App</h1></body></html>' > out/index.html
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
           npx cap init Ultron com.ultron.app --web-dir out
           npx cap add android
           npx cap sync android
@@ -41,7 +41,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon --no-build-cache
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
