@@ -12,18 +12,18 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Setup Java JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -31,21 +31,18 @@ jobs:
       - name: Build Web App
         run: npm run build
 
-      - name: Add Capacitor Android
+      - name: Add Capacitor & Build APK
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init Ultron App com.ultron.app --web-dir out
-          npx cap add android
+          npx cap init Ultron com.ultron.app --web-dir out
+          npx cap add android || true
           npx cap copy
-
-      - name: Build Android APK
-        run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Ultron-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
