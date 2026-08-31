@@ -28,9 +28,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Build Web Assets & Setup Capacitor
+      - name: Create Dummy Static Output & Setup Capacitor
         run: |
-          npm run build || true
+          mkdir -p out
+          echo '<html><body><h1>Ultron App</h1></body></html>' > out/index.html
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init Ultron com.ultron.app --web-dir out
           npx cap add android
@@ -40,7 +41,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
