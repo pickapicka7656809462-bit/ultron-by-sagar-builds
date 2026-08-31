@@ -28,19 +28,19 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Force Static Export & Add Capacitor
+      - name: Build Web Assets & Setup Capacitor
         run: |
-          npx next build || true
+          npm run build || true
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init Ultron com.ultron.app --web-dir out || npx cap init Ultron com.ultron.app --web-dir public
-          npx cap add android || true
-          npx cap copy
+          npx cap init Ultron com.ultron.app --web-dir out
+          npx cap add android
+          npx cap sync android
 
       - name: Build Android APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
