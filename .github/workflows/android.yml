@@ -17,10 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-
-      - name: Install Dependencies
-        run: npm install
+          node-version: 22
 
       - name: Setup Java JDK
         uses: actions/setup-java@v4
@@ -28,12 +25,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Create Dummy Static Output & Setup Capacitor
+      - name: Install Dependencies & Setup Capacitor
         run: |
+          npm install
           mkdir -p out
           echo '<html><body><h1>Ultron App</h1></body></html>' > out/index.html
-          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
-          npx cap init Ultron com.ultron.app --web-dir out
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npx cap init Ultron com.ultron.app --web-dir out --no-interaction
           npx cap add android
           npx cap sync android
 
